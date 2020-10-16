@@ -5,16 +5,14 @@ import (
 	"os"
 )
 
+const NUMBUILTINS = 4
+
 type builtinFunc func([]string) int
 
-var builtinArray [3]string
+var builtinArray [NUMBUILTINS]string
 
 var mapBuiltinFn map[string]builtinFunc
 
-func numBuiltins() int {
-
-	return len(builtinArray)
-}
 
 func cd(args []string) int {
 	if len(args) < 2 {
@@ -31,20 +29,21 @@ func cd(args []string) int {
 
 func initialize() {
 
-	array := [3]string{"cd", "help", "exit"}
-	mapfunc := make(map[string]builtinFunc, 3)
+	array := [NUMBUILTINS]string{"cd", "help", "exit", "load"}
+	mapfunc := make(map[string]builtinFunc, NUMBUILTINS)
 	builtinArray = array
 	mapBuiltinFn = mapfunc
 	mapBuiltinFn[array[0]] = cd
 	mapBuiltinFn[array[1]] = help
 	mapBuiltinFn[array[2]] = exit
+	mapBuiltinFn[array[3]] = load
 }
 
 func help([]string) int {
 
 	fmt.Printf("Konstantinos Lampropoulos's Simple Go Shell\n")
-	for i := 0; i < numBuiltins(); i++ {
-		fmt.Printf("   %s\n", builtinArray[i])
+	for i := 0; i < NUMBUILTINS; i++ {
+		fmt.Printf(" %s\n", builtinArray[i])
 	}
 	fmt.Printf("Use the man command for information on other programs\n")
 	return 1
@@ -53,4 +52,12 @@ func help([]string) int {
 func exit([]string) int {
 
 	return 0
+}
+
+func load(paths [] string) int {
+
+	for _, str := range paths {
+		loadEnvVar(str)
+	}
+	return 1
 }

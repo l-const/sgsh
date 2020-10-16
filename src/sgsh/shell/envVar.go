@@ -7,10 +7,11 @@ import (
 	"strings"
 )
 
+var envVars map[string]string =  make(map[string]string)
+
 func parse(path string) map[string]string {
 
-	var envVars map[string]string
-	envVars = make(map[string]string)
+	
 	file, err := os.Open(path)
 	if err != nil{
 		log.Fatalf("failed opening file: %s", path)
@@ -49,6 +50,6 @@ func parse(path string) map[string]string {
 
 func loadEnvVar(path string) map[string]string {
 
-	envVars := parse(path)
+	envVars = parse(path)
 	return envVars
 }

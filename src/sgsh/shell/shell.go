@@ -7,6 +7,9 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+	"log"
+	"errors"
+
 )
 
 // ReadLine : Read the command from standard input.
@@ -38,8 +41,31 @@ func SplitLine(line string) []string {
 	return words
 }
 
+func ProcessArgs(args [] string,vars map[string]string) ([]string,  error) {
+
+	// args := ["$NAME", "cd", ... ]
+	/// vars := ["NAME": "KONSTANSTINOS"]
+	var err error
+	for i, v := range args {
+		if strings.Contains(v, "$") {
+			tokens := strings.Split(v, "$") // $NAME => $ + NAME
+			args[i] =  tokens[1]
+			if _ , ok := vars[args[i]]; ok {
+				args[i] = vars[args[i]]
+			} else {
+				log.Print("$" + args[i] + " not defined!")
+				err = errors.New("$" + args[i] + " not defined!")
+			}
+			fmt.Println(args[i])
+		}
+	}
+
+	return args, err 
+}
+
 // Execute : Run the parsed command.
 func Execute(args []string) int {
+
 	if len(args) == 0 {
 		// Empty command
 		return 1
@@ -81,14 +107,19 @@ func Launch(args []string) int {
 	return 1
 }
 
-// Loop sdsdsds.
+// Loop execution.
 func Loop() {
-
+	var err error
 	status := 1
 	for status != 0 {
 		fmt.Printf("[$sgsh] > ")
 		line := ReadLine()
 		args := SplitLine(string(line))
+		vars := loadEnvVar(".sgsh_profile")
+		args, err = ProcessArgs(args, vars)
+		if err != nil {
+			continue
+		}
 		status = Execute(args)
 	}
 }
