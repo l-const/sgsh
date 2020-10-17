@@ -8,7 +8,7 @@ func TestProcessArgs(t *testing.T) {
 
 	args := []string{"$NAME" , "$SURNAME", "$AGE"}
 	expectedArgs := []string{"konstantinos", "Lampropoulos", "AGE"}
-	vars := map[string]string {"NAME" : "konstantinos", "SURNAME" : "Lampropoulos"}
+	vars := map[string]string {"$NAME" : "konstantinos", "$SURNAME" : "Lampropoulos"}
 	resArgs, _ := ProcessArgs(args, vars)
 	if len(resArgs) == len(expectedArgs) {
 		for i := range resArgs {

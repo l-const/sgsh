@@ -18,6 +18,7 @@ func cd(args []string) int {
 	if len(args) < 2 {
 		panic("Not enough arguments!")
 	} else {
+		// Todo : syscall.syscall
 		err := os.Chmod(args[1], 0777)
 		err = os.Chdir(args[1])
 		if err != nil {
