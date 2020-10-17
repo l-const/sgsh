@@ -44,17 +44,15 @@ func SplitLine(line string) []string {
 func ProcessArgs(args [] string,vars map[string]string) ([]string,  error) {
 
 	// args := ["$NAME", "cd", ... ]
-	/// vars := ["NAME": "KONSTANSTINOS"]
+	/// vars := ["$NAME": "KONSTANSTINOS"]
 	var err error
 	for i, v := range args {
 		if strings.Contains(v, "$") {
-			tokens := strings.Split(v, "$") // $NAME => $ + NAME
-			args[i] =  tokens[1]
 			if _ , ok := vars[args[i]]; ok {
 				args[i] = vars[args[i]]
 			} else {
-				log.Print("$" + args[i] + " not defined!")
-				err = errors.New("$" + args[i] + " not defined!")
+				log.Print(args[i] + " not defined!")
+				err = errors.New(args[i] + " not defined!")
 			}
 			fmt.Println(args[i])
 		}
@@ -71,7 +69,7 @@ func Execute(args []string) int {
 		return 1
 	}
 	initialize()
-	for i := 0; i < numBuiltins(); i++ {
+	for i := 0; i < NUMBUILTINS; i++ {
 		if args[0] == builtinArray[i] {
 			return mapBuiltinFn[builtinArray[i]](args)
 		}
@@ -84,20 +82,11 @@ func Launch(args []string) int {
 
 	_, err := exec.LookPath(args[0])
 	if err != nil {
-		var procAttr os.ProcAttr
-		procAttr.Dir = "."
-		procAttr.Env = os.Environ()
-		procAttr.Files = []*os.File{os.Stdin,
-			os.Stdout, os.Stderr}
-		proc, err := os.StartProcess(args[0], args[1:], &procAttr)
-		if err == nil {
-			proc.Wait()
-			return 1
-		}
-		panic(err)
+		
+		fmt.Println(err)
+		fmt.Println("Unkown command or implemented by syscall!")
 	}
-	// Todo: add environmetal variables and pass them
-	// Todo: in the execution
+
 	cmd := exec.Command(args[0], args[1:]...)
 	stdout, err := cmd.Output()
 	if err != nil {

@@ -36,7 +36,7 @@ func parse(path string) map[string]string {
 					if strings.Contains(field, "=") {
 						tokens := strings.Split(field, "=")
 						tokens[1] = strings.Trim(tokens[1], "\"")
-						name, value := tokens[0], tokens[1]
+						name, value := "$" + tokens[0], tokens[1]
 						envVars[name] = value
 						
 				}	

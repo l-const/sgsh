@@ -54,10 +54,14 @@ func exit([]string) int {
 	return 0
 }
 
-func load(paths [] string) int {
+func load(args [] string) int {
 
-	for _, str := range paths {
-		loadEnvVar(str)
+	// args[0] == load(command)
+	for i, str := range args {
+		if i != 0 {
+			loadEnvVar(str)
+		}
+		
 	}
 	return 1
 }
