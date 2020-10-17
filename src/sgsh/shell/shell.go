@@ -41,6 +41,7 @@ func SplitLine(line string) []string {
 	return words
 }
 
+
 func ProcessArgs(args [] string,vars map[string]string) ([]string,  error) {
 
 	// args := ["$NAME", "cd", ... ]
@@ -63,12 +64,21 @@ func ProcessArgs(args [] string,vars map[string]string) ([]string,  error) {
 // Execute : Run the parsed command.
 func Execute(args []string) (int, error) {
 
-
 	var err error
 	if len(args) == 0 {
 		// Empty command
 		return 1, err
 	}
+	for i, v := range args {
+		if strings.Contains(v, "&") {
+			// multiple commands
+			j, _ := Execute(args[:i])
+			i, _ := Execute(args[i+1:])
+			return i & j, nil
+		}
+
+	}
+
 	for i := 0; i < NUMBUILTINS; i++ {
 		if args[0] == builtinArray[i] {
 			return mapBuiltinFn[builtinArray[i]](args)

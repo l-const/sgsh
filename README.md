@@ -8,18 +8,16 @@ Inspired by Stephen Brennan's [Write a shell in C](https://brennan.io/2015/01/16
 
 
 ## Todos
-<hr>
 
-- [x] Parsing a .profile, .rc file in order to load environment vairables.
-- [x] Evaluate environment vairables when passed as arguments in commands.
+- [x] Parsing a .profile, .rc file in order to load environment variables.
+- [x] Evaluate environment variables when passed as arguments in commands.
 - [ ] Implement piping => |
-- [ ] Implement chaining => &&
+- [x] Implement chaining => &&
 - [ ] Handle `` when parsing files, commands.
 - [ ] Testing
 
 
 
 ## Demo
-<hr>
 
 [![asciicast](https://asciinema.org/a/7IIKQtJnEBTahvHw1czk0Jm9Y.svg)](https://asciinema.org/a/7IIKQtJnEBTahvHw1czk0Jm9Y)
