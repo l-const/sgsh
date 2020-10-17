@@ -44,7 +44,7 @@ func SplitLine(line string) []string {
 func ProcessArgs(args [] string,vars map[string]string) ([]string,  error) {
 
 	// args := ["$NAME", "cd", ... ]
-	/// vars := ["$NAME": "KONSTANSTINOS"]
+	// vars := ["$NAME": "KONSTANSTINOS"]
 	var err error
 	for i, v := range args {
 		if strings.Contains(v, "$") {
@@ -54,7 +54,6 @@ func ProcessArgs(args [] string,vars map[string]string) ([]string,  error) {
 				log.Print(args[i] + " not defined!")
 				err = errors.New(args[i] + " not defined!")
 			}
-			fmt.Println(args[i])
 		}
 	}
 
@@ -62,13 +61,14 @@ func ProcessArgs(args [] string,vars map[string]string) ([]string,  error) {
 }
 
 // Execute : Run the parsed command.
-func Execute(args []string) int {
+func Execute(args []string) (int, error) {
 
+
+	var err error
 	if len(args) == 0 {
 		// Empty command
-		return 1
+		return 1, err
 	}
-	initialize()
 	for i := 0; i < NUMBUILTINS; i++ {
 		if args[0] == builtinArray[i] {
 			return mapBuiltinFn[builtinArray[i]](args)
@@ -78,37 +78,41 @@ func Execute(args []string) int {
 }
 
 // Launch : Run the parsed command.
-func Launch(args []string) int {
+func Launch(args []string) (int, error) {
 
 	_, err := exec.LookPath(args[0])
 	if err != nil {
-		
 		fmt.Println(err)
 		fmt.Println("Unkown command or implemented by syscall!")
+	} else {
+		if len(args) > 1 {
+			cmd := exec.Command(args[0], args[1:]...)
+			stdout, err := cmd.Output()
+			if err != nil {
+				panic(err)
+			}
+			fmt.Print(string(stdout))
+		} else {
+			fmt.Println("Not enough arguments")
+		}
 	}
-
-	cmd := exec.Command(args[0], args[1:]...)
-	stdout, err := cmd.Output()
-	if err != nil {
-		panic(err)
-	}
-	fmt.Print(string(stdout))
-	return 1
+	return 1, err
 }
 
 // Loop execution.
 func Loop() {
 	var err error
 	status := 1
+	initialize()
+	vars, _ := loadEnvVar(".sgsh_profile")
 	for status != 0 {
 		fmt.Printf("[$sgsh] > ")
 		line := ReadLine()
 		args := SplitLine(string(line))
-		vars := loadEnvVar(".sgsh_profile")
 		args, err = ProcessArgs(args, vars)
 		if err != nil {
 			continue
 		}
-		status = Execute(args)
+		status, err = Execute(args)
 	}
 }

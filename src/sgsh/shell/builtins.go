@@ -2,30 +2,34 @@ package shell
 
 import (
 	"fmt"
-	"os"
+	"syscall"
+	"log"
+	"errors"
 )
 
 const NUMBUILTINS = 4
 
-type builtinFunc func([]string) int
+type builtinFunc func([]string) (int, error)
 
 var builtinArray [NUMBUILTINS]string
 
 var mapBuiltinFn map[string]builtinFunc
 
 
-func cd(args []string) int {
+func cd(args []string) (int, error) {
+
+	var err error
 	if len(args) < 2 {
-		panic("Not enough arguments!")
+		log.Printf("Not enough arguments!")
+		err = errors.New("Not enough arguments!")
 	} else {
-		// Todo : syscall.syscall
-		err := os.Chmod(args[1], 0777)
-		err = os.Chdir(args[1])
+		err = syscall.Chdir(args[1])
 		if err != nil {
-			panic(err)
+			fmt.Println("error chdir")
 		}
+		fmt.Printf("SURVIVED CHDIR!")
 	}
-	return 1
+	return 1, err
 }
 
 func initialize() {
@@ -40,29 +44,32 @@ func initialize() {
 	mapBuiltinFn[array[3]] = load
 }
 
-func help([]string) int {
-
+func help([]string) (int, error) {
+	
+	var err error
 	fmt.Printf("Konstantinos Lampropoulos's Simple Go Shell\n")
 	for i := 0; i < NUMBUILTINS; i++ {
 		fmt.Printf(" %s\n", builtinArray[i])
 	}
 	fmt.Printf("Use the man command for information on other programs\n")
-	return 1
+	return 1, err
 }
 
-func exit([]string) int {
+func exit([]string) (int, error) {
 
-	return 0
+	var err error
+	return 0, err
 }
 
-func load(args [] string) int {
+func load(args [] string) (int, error) {
 
+	var err error
 	// args[0] == load(command)
 	for i, str := range args {
 		if i != 0 {
-			loadEnvVar(str)
+			_, err = loadEnvVar(str)
 		}
 		
 	}
-	return 1
+	return 1, err
 }
