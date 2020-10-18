@@ -27,8 +27,8 @@ Inspired by Stephen Brennan's [Write a shell in C](https://brennan.io/2015/01/16
 
 ### Run
 
-![](carbon_run.png)
+![](extras/carbon_run.png)
 
 ### Build
 
-![](carbon_build.png)
+![](extras/carbon_build.png)
