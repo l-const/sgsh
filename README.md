@@ -11,13 +11,24 @@ Inspired by Stephen Brennan's [Write a shell in C](https://brennan.io/2015/01/16
 
 - [x] Parsing a .profile, .rc file in order to load environment variables.
 - [x] Evaluate environment variables when passed as arguments in commands.
-- [ ] Implement piping => |
-- [x] Implement chaining => &&
+- [x] Implement pipes => |
+- [x] Implement chains => &
 - [ ] Handle `` when parsing files, commands.
-- [ ] Testing
+
 
 
 
 ## Demo
 
 [![asciicast](https://asciinema.org/a/7IIKQtJnEBTahvHw1czk0Jm9Y.svg)](https://asciinema.org/a/7IIKQtJnEBTahvHw1czk0Jm9Y)
+
+
+## How to run/build
+
+### Run
+
+![](carbon_run.png)
+
+### Build
+
+![](carbon_build.png)

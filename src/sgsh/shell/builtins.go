@@ -21,7 +21,7 @@ func cd(args []string) (int, error) {
 	var err error
 	if len(args) < 2 {
 		log.Printf("Not enough arguments!")
-		err = errors.New("Not enough arguments!")
+		err = errors.New("Not enough arguments")
 	} else {
 		err = syscall.Chdir(args[1])
 		if err != nil {
